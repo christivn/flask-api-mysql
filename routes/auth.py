@@ -58,3 +58,20 @@ def register():
     except:
         return jsonify({ 'msg': 'Error en el registro', 'code':400 })
 
+
+# Comprueba el token y devuelve los datos del usuario
+@app.route('/auth/user', methods=['GET'])
+def get_user():
+    token = getToken()
+
+    if not token:
+        return jsonify({ 'msg':'Missing token', 'code':403 })
+
+    data = checkToken(token)
+
+    if not data:
+        return jsonify({ 'msg':'Invalid token','code':403 })
+
+    # TODO
+    # decodificar el token y devolver los datos en formato json
+        
