@@ -5,7 +5,7 @@ import os
 # inicializar Flask
 app = Flask(__name__)
 
-# Console Logs
+# Deshabilitar Console Logs
 import logging
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
@@ -46,6 +46,7 @@ def index():
 
     < Author >
     Christian Ramos Ortiz <b>(christivn)</b></pre>"""
+
 
 print("\033[92m",end="")
 import routes
