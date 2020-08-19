@@ -3,7 +3,6 @@ from server import app, mysql
 
 
 # Info del perfil de un usuario
-# User profile information
 @app.route('/user/<nick>', methods=['GET'])
 def user_info(nick):
     try:
@@ -13,8 +12,10 @@ def user_info(nick):
         cur.close()
 
         return jsonify({ 'id': resultado[0][0], 'nick': resultado[0][1], 'url_foto':'', 'bio':'', 'pais':'', 'fecha_registro':resultado[0][6].strftime("%Y/%m/%d"), 'fecha_ultima_conexion':resultado[0][7].strftime("%Y/%m/%d %H:%M:%S") })
-    except:
-        abort(404)
+    except Exception as e:
+        abort(400)
+
+
 
 # Elimina el usuario de la base de datos
 # Get rid of specified user
@@ -25,14 +26,14 @@ def delete_user(nick):
         res = cur.execute("delete from usuarios where nick='"+nick+"'")
         if res:
             mysql.connection.commit()
-            return jsonify({ 'msg':'User successfully deleted' })
+            return jsonify({ 'msg':'User successfully deleted'}), 200
         else: return jsonify({ 'msg':'User doesnt exist' }), 404
-    except:
-        abort(404)
+    except Exception as e:
+        abort(400)
 
 
-# Proyectos de un usuario (en los que participa o ha participado)
-# Projects of specified user (in which he is or was part)
+
+# Proyectos de un usuario (en los que participa o a participado)
 @app.route('/user/proyects/<nick>', methods=['GET'])
 def user_proyects(nick):
     try:
@@ -44,6 +45,6 @@ def user_proyects(nick):
         print(resultado) # DEBUG
 
         json="{ 'id_proyect': '', 'id_usuario': '', 'fecha_entrada':'', 'fecha_salida':'' }"
-        return jsonify(json)
-    except:
-        abort(404)
+        return jsonify(json), 200
+    except Exception as e:
+        abort(400)
