@@ -5,6 +5,7 @@ from datetime import datetime
 
 
 # Comprobar login, y generar token
+# Login, and generate token
 @app.route('/auth/login', methods=['POST'])
 def login():
     try:
@@ -17,7 +18,7 @@ def login():
             email = request.args['email']
             password = request.args['password']
         except:
-            return jsonify({ 'msg': 'Error en los parametros', 'code':400 })
+            return jsonify({ 'msg': 'Invalid parameters', 'code':400 })
 
     ##################
     #   Consultas SQL
@@ -28,6 +29,7 @@ def login():
 
 
 # Registro, check de disponibilidad de usuario, y generar token
+# Sign-up, check username disponibility, and generate token
 @app.route('/auth/register', methods=['POST'])
 def register():
     try:
@@ -41,7 +43,7 @@ def register():
         fregistro = timestamp
         fultimaconex = timestamp
     except:
-        return jsonify({ 'msg': 'Error en los parametros', 'code':400 }), 400
+        return jsonify({ 'msg': 'Invalid parameters', 'code':400 }), 400
 
     try:
         cur = mysql.connection.cursor()
@@ -58,7 +60,7 @@ def register():
         cur.close()
 
         date_time = now.strftime("%d/%m/%Y, %H:%M")
-        print("\033[37m[\033[32m\033[01m+\033[0m\033[37m]\033[37m Nuevo usuario registrado \033[35m{"+nick+"} \033[37m("+date_time+")\033[0m")
+        print("\033[37m[\033[32m\033[01m+\033[0m\033[37m]\033[37m New user signed up \033[35m{"+nick+"} \033[37m("+date_time+")\033[0m")
         return jsonify({ 'msg': 'Successful sign up', 'token':'1234567890', 'code':200 })
     except:
         return jsonify({ 'msg': 'Error signing up', 'code':400 }), 400
