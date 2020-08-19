@@ -3,6 +3,7 @@ from server import app, mysql
 
 
 # Info del perfil de un usuario
+# User profile information
 @app.route('/user/<nick>', methods=['GET'])
 def user_info(nick):
     try:
@@ -15,9 +16,23 @@ def user_info(nick):
     except:
         abort(404)
 
+# Elimina el usuario de la base de datos
+# Get rid of specified user
+@app.route('/user/<nick>', methods=['DELETE'])
+def delete_user(nick):
+    try:
+        cur = mysql.connection.cursor()
+        res = cur.execute("delete from usuarios where nick='"+nick+"'")
+        if res:
+            mysql.connection.commit()
+            return jsonify({ 'msg':'User successfully deleted' })
+        else: return jsonify({ 'msg':'User doesnt exist' }), 404
+    except:
+        abort(404)
 
 
-# Proyectos de un usuario (en los que participa o a participado)
+# Proyectos de un usuario (en los que participa o ha participado)
+# Projects of specified user (in which he is or was part)
 @app.route('/user/proyects/<nick>', methods=['GET'])
 def user_proyects(nick):
     try:
