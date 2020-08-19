@@ -18,12 +18,14 @@ def user_info(nick):
 
 # Elimina el usuario de la base de datos
 # Get rid of specified user
-@app.route('/user/<nick>', methods=['DELETE'])
-def delete_user(nick):
+@app.route('/user/<id>', methods=['DELETE'])
+def delete_user(id):
     try:
         cur = mysql.connection.cursor()
-        res = cur.execute("delete from usuarios where nick='"+nick+"'")
-        if res:
+        res = cur.execute("delete from usuarios where id='"+id+"'")
+        res2 = cur.execute("delete from userinfo where id='"+id+"'")
+        cur.execute("delete from usuarios_proyectos where id_usuario='"+id+"'")
+        if res and res2:
             mysql.connection.commit()
             return jsonify({ 'msg':'User successfully deleted' })
         else: return jsonify({ 'msg':'User doesnt exist' }), 404
