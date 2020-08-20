@@ -4,6 +4,7 @@ import os
 
 # inicializar Flask
 app = Flask(__name__)
+app.secret_key = '123456'
 
 # Deshabilitar Console Logs
 import logging
