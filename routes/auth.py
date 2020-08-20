@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request, jsonify, session
 from server import app, mysql
 from datetime import datetime
 
@@ -20,8 +20,7 @@ def login():
             tipoLogin="nick"
         else:
             tipoLogin="email"
-
-    except Exception as e:
+    except:
         return jsonify({ 'msg': 'Error with params'}), 400
 
     try:
@@ -38,6 +37,7 @@ def login():
             cur.close()
 
             if num_rows:
+                session['nick']=nick
                 date_time = now.strftime("%d/%m/%Y, %H:%M")
                 print("\033[37m[\033[32m\033[01m+\033[0m\033[37m]\033[37m Login de usuario \033[35m{"+nick+"} \033[37m("+date_time+")\033[0m")
                 return jsonify({ 'msg': 'Successful log-in'}), 200
@@ -46,6 +46,11 @@ def login():
         
         # Login usando email
         if(tipoLogin=="email"):
+
+            ##########################################################################
+            #   Consulta para sacar el nick del usuario y guardarlo en las cookies   #
+            ##########################################################################
+
             cur = mysql.connection.cursor()
             cur.execute("SELECT * FROM usuarios WHERE email='"+email+"' and password='"+password+"'")
             num_rows = cur.fetchall()
@@ -64,7 +69,6 @@ def login():
                 return jsonify({ 'msg': 'Account does not exist'}), 400
 
     except Exception as e:
-        print(e)
         return jsonify({ 'msg': 'Error log-in'}), 200
 
 
@@ -82,7 +86,7 @@ def register():
         ip = request.remote_addr
         fregistro = timestamp
         fultimaconex = timestamp
-    except Exception as e:
+    except:
         return jsonify({ 'msg': 'Error with params'}), 400
 
     try:
@@ -104,3 +108,13 @@ def register():
     except Exception as e:
         return jsonify({ 'msg': 'Error signing up' }), 400
 
+
+
+# Logout del usuario
+@app.route('/auth/logout', methods=['GET'])
+def logout():
+    try:
+        session.pop('nick', None)
+        return jsonify({ 'msg': 'Successful logout' }), 200
+    except:
+        return jsonify({ 'msg': 'Error signing up' }), 400
