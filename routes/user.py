@@ -2,7 +2,8 @@ from flask import request, jsonify, abort
 from server import app, mysql
 
 
-# Info de mediante nick de usuario
+# Info mediante nick de usuario
+# User info by nickname
 @app.route('/user/<nick>', methods=['GET'])
 def user_info(nick):
     try:
@@ -36,6 +37,7 @@ def delete_user(nick):
 
 
 # Proyectos de un usuario (en los que participa o a participado)
+# User projects (in which he takes or took part)
 @app.route('/user/proyects/<nick>', methods=['GET'])
 def user_proyects(nick):
     try:
